@@ -1,9 +1,369 @@
 'use strict';
 
-const {} = require('express-handler-loader')('all');
+const {
+	isAccountSignedIn,
+	$testBody,
+	$testQuery
+} = require('express-handler-loader')('all');
 
-const {} = require('express-handler-loader')('ufwd');
+const {
+	isAdminiSignedIn
+} = require('express-handler-loader')('ufwd');
 
-const {} = require('express-handler-loader')('ufwd_survey');
+const {
+	createSurvey,
+	getSurveyList,
+	getSurvey,
+	isSurveyPublished,
+	updateSurvey,
+	deleteSurvey,
+	createSurveyTag,
+	deleteSurveyTag,
+	createVote,
+	getVoteList,
+	getVote,
+	updateVote,
+	deleteVote,
+	isVotePublished,
+	createVoteTag,
+	deleteVoteTag,
+	createComment,
+	getOwnSurveyList,
+	getOwnVoteList,
+	getVoteSample,
+	createSurveySample,
+	createVoteSample
+} = require('express-handler-loader')('ufwd_survey');
 
 const router = module.exports = require('express').Router();
+
+router.post('/api/ufwd/service/survey', $testBody({
+	properties: {
+		title: {
+			type: 'string',
+			minLength: 4
+		},
+		rule: {
+			type: 'string'
+		},
+		time: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		content: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					topic: {
+						type: 'string'
+					},
+					options: {
+						type: 'array'
+					}
+				},
+				additionalProperties: false,
+				required: ['topic', 'options']
+			}
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	},
+	required: ['title', 'rule', 'time', 'content', 'published'],
+	additionalProperties: false
+}), isAdminiSignedIn, createSurvey);
+
+router.get('/api/ufwd/service/survey', $testQuery({
+	properties: {
+		keyword: {
+			type: 'string',
+			minLength: 4
+		},
+		tag: {
+			type: 'string'
+		},
+		close: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	},
+	additionalProperties: false
+}), isAdminiSignedIn, getSurveyList);
+
+router.get('/api/ufwd/service/survey/:surveyId', isAdminiSignedIn, getSurvey);
+
+router.put('/api/ufwd/service/survey/:surveyId', $testBody({
+	properties: {
+		title: {
+			type: 'string',
+			minLength: 4
+		},
+		rule: {
+			type: 'string'
+		},
+		time: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		content: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					topic: {
+						type: 'string'
+					},
+					options: {
+						type: 'array'
+					}
+				},
+				additionalProperties: false,
+				required: ['topic', 'options']
+			}
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	},
+	additionalProperties: false
+}), isAdminiSignedIn, isSurveyPublished, updateSurvey);
+
+router.delete('/api/ufwd/service/survey/:surveyId', isSurveyPublished, deleteSurvey);
+
+router.post('/api/ufwd/service/survey/:surveyId/tag', $testBody({
+	tag: {
+		type: 'string'
+	},
+	require: ['tag'],
+	additionalProperties: false
+}), isAdminiSignedIn, isSurveyPublished, createSurveyTag);
+
+router.delete('/api/ufwd/service/survey/tag/:tagId', isAdminiSignedIn, deleteSurveyTag);
+
+router.post('/api/ufwd/service/vote', $testBody({
+	properties: {
+		title: {
+			type: 'string',
+			minLength: 4
+		},
+		topic: {
+			type: 'string',
+			minLength: 4
+		},
+		rule: {
+			type: 'string'
+		},
+		time: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		content: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					options: {
+						type: 'string'
+					},
+					content: {
+						type: 'string'
+					}
+				},
+				additionalProperties: false,
+				required: ['options', 'content']
+			}
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	},
+	required: ['title', 'topic', 'rule', 'time', 'content', 'published'],
+	additionalProperties: false
+}), isAdminiSignedIn, createVote);
+
+router.get('/api/ufwd/service/vote', $testQuery({
+	properties: {
+		keyword: {
+			type: 'string',
+			minLength: 4
+		},
+		tag: {
+			type: 'string'
+		},
+		close: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	},
+	additionalProperties: false
+}), isAdminiSignedIn, getVoteList);
+
+router.get('/api/ufwd/service/vote/:voteId', isAdminiSignedIn, getVote);
+
+router.put('/api/ufwd/service/vote/:voteId', $testBody({
+	properties: {
+		title: {
+			type: 'string',
+			minLength: 4
+		},
+		topic: {
+			type: 'string',
+			minLength: 4
+		},
+		rule: {
+			type: 'string'
+		},
+		time: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		content: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					options: {
+						type: 'string'
+					},
+					content: {
+						type: 'string'
+					}
+				},
+				additionalProperties: false,
+				required: ['options', 'content']
+			}
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	},
+	additionalProperties: false
+}), isAdminiSignedIn, isVotePublished, updateVote);
+
+router.delete('/api/ufwd/service/vote/:voteId', isVotePublished, deleteVote);
+
+router.post('/api/ufwd/service/vote/:voteId/tag', $testBody({
+	tag: {
+		type: 'string'
+	},
+	require: ['tag'],
+	additionalProperties: false
+}), isAdminiSignedIn, isVotePublished, createVoteTag);
+
+router.delete('/api/ufwd/service/vote/tag/:tagId', isAdminiSignedIn, deleteVoteTag);
+
+router.put('/api/ufwd/service/vote/:voteId/comment', $testBody({
+	comment: {
+		type: 'string'
+	},
+	additionalProperties: false,
+	required: ['comment']
+}), isAdminiSignedIn, createComment);
+
+router.get('/api/ufwd/app/survey', $testQuery({
+	properties: {
+		keyword: {
+			type: 'string',
+			minLength: 4
+		},
+		tag: {
+			type: 'string'
+		},
+		close: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		}
+	},
+	required: ['title', 'rule', 'time', 'content', 'published'],
+	additionalProperties: false
+}), isAccountSignedIn, getOwnSurveyList);
+
+router.get('/api/ufwd/app/vote', $testQuery({
+	properties: {
+		keyword: {
+			type: 'string',
+			minLength: 4
+		},
+		tag: {
+			type: 'string'
+		},
+		close: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		selft: {
+			type: 'string',
+			pattern: '(^true$|^false$)'
+
+		}
+	},
+	required: ['title', 'rule', 'time', 'content', 'published'],
+	additionalProperties: false
+}), isAccountSignedIn, getOwnVoteList);
+
+router.get('/api/ufwd/app/vote/:voteId', isAccountSignedIn, getVoteSample);
+
+router.post('/api/ufwd/app/survey/:surveyId/sample', $testBody({
+	properties: {
+		answer: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					topic: {
+						type: 'string'
+					},
+					options: {
+						type: 'array'
+					}
+				},
+				additionalProperties: false,
+				required: ['topic', 'options']
+			}
+		}
+	},
+	required: ['answer'],
+	additionalProperties: false
+}), isAdminiSignedIn, createSurveySample);
+
+router.post('/api/ufwd/app/vote/:voteId/sample', $testBody({
+	properties: {
+		answer: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					topic: {
+						type: 'string'
+					},
+					options: {
+						type: 'array'
+					}
+				},
+				additionalProperties: false,
+				required: ['topic', 'options']
+			}
+		}
+	},
+	required: ['answer'],
+	additionalProperties: false
+}), isAdminiSignedIn, createVoteSample);

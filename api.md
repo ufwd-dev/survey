@@ -15,7 +15,7 @@ service:
 }
 ```
 
-## GET /api/ufwd/service/vote?keyword=string&time=string&tag=string&published=boolean
+## GET /api/ufwd/service/vote?keyword=string&close=string&tag=string&published=boolean
 查看所有的投票
 
 ## GET /api/ufwd/service/vote/:voteId
@@ -92,7 +92,7 @@ service:
 }
 ```
 ## ADD
-## DELETE /api/ufwd/service/survey/:surveyId/tag
+## DELETE /api/ufwd/service/survey/tag/:tagId
 给某个问卷删除标签
 
 ## GET /api/ufwd/service/survey/:surveyId/sample
@@ -101,7 +101,7 @@ service:
 app:
 ======================================
 
-## GET /api/ufwd/app/vote?keyword=string&time=string&self=true
+## GET /api/ufwd/app/vote?keyword=string&time=string&self=true&tag=string
 查看所有的投票
 
 ## POST /api/ufwd/app/vote/:voteId/sample
@@ -119,7 +119,7 @@ app:
 查看某条投票的结果
 
 
-## GET /api/ufwd/app/survey&keyword=string&time=string
+## GET /api/ufwd/app/survey?keyword=string&close=string&tag=string
 查看所有的问卷
 
 ## POST /api/ufwd/app/survey/:surveyId/sample

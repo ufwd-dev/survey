@@ -2,14 +2,14 @@
 
 const { throwError } = require('express-handler-loader');
 
-module.exports = function* createComment(req, res, next) {
+module.exports = function* isVotePublished(req, res, next) {
 	const Vote = res.sequelize.model('ufwdVote');
 	const voteId = req.params.voteId;
 
 	const vote = yield Vote.findOne({
 		where: {
 			id: voteId,
-			published: 1
+			published: 0
 		}
 	});
 
@@ -17,9 +17,7 @@ module.exports = function* createComment(req, res, next) {
 		throwError('The vote is not existed', 404);
 	}
 
-	const result = yield vote.update(req.body);
-
-	res.data(result);
+	res.data(vote);
 
 	next();
 };
