@@ -129,3 +129,10 @@ app:
     answer: TEXT
 }
 ```
+## ADDED
+
+## GET /api/ufwd/app/vote/:voteId
+查看某个投票
+
+## GET /api/ufwd/app/survey/:surveyId
+查看某个的问卷

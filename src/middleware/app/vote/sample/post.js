@@ -1,6 +1,7 @@
 'use strict';
 
 const { throwError } = require('express-handler-loader');
+const { voteResolve } = require('express-handler-loader')('ufwd_survey_util');
 
 module.exports = function* createVoteSample(req, res, next) {
 	const  VoteSample = res.sequelize.model('ufwdVoteSample');
@@ -10,7 +11,8 @@ module.exports = function* createVoteSample(req, res, next) {
 
 	const vote = yield Vote.findOne({
 		where: {
-			id: voteId
+			id: voteId,
+			published: 1
 		}
 	});
 
@@ -25,15 +27,28 @@ module.exports = function* createVoteSample(req, res, next) {
 	}
 
 	if (!sample) {
-		throwError('You have post to this survey..', 404);
+		throwError('You have post to this vote.', 404);
 	}
+
 
 	const voteSample = yield VoteSample.create({
 		accountId, vote,
 		answer: req.body.answer
 	});
 
-	res.data(voteSample);
+	const statistic = voteResolve({}, vote.content, voteSample);
+
+	const result = yield vote.update({
+		count: vote.count++,
+		statistic
+	});
+
+	res.data({
+		topic: result.topic,
+		statistic,
+		count: result.count,
+		ownSample: voteSample
+	});
 
 	next();
 };

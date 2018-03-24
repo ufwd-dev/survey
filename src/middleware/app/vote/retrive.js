@@ -2,22 +2,18 @@
 
 const { throwError } = require('express-handler-loader');
 
-module.exports = function* getVoteSample(req, res, next) {
-	const voteId = req.params.voteId;
-	const accountId = req.session.accountId;
-	const VoteSample = res.sequelize.model('ufwdVoteSample');
+module.exports = function getUnexpiredVote(req, res, next) {
+	const vote = res.data();
 
-	const voteSample = yield VoteSample.findOne({
-		where: {
-			voteId, accountId
-		}
-	});
-
-	if (!voteSample) {
-		throwError('The sample is not existed', 404);
+	if (vote.published !== 1) {
+		throwError('The vote is not existed.', 404);
+	}
+	
+	if (Date.parse(vote.published) <= new Date()) {
+		throwError('The vote is out of date.', 404);
 	}
 
-	res.data(voteSample);
+	res.data(vote);
 
 	next();
 };

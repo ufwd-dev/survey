@@ -2,19 +2,11 @@
 
 const { throwError } = require('express-handler-loader');
 
-module.exports = function* isVotePublished(req, res, next) {
-	const Vote = res.sequelize.model('ufwdVote');
-	const voteId = req.params.voteId;
+module.exports = function isVotePublished(req, res, next) {
+	const vote = res.data();
 
-	const vote = yield Vote.findOne({
-		where: {
-			id: voteId,
-			published: 0
-		}
-	});
-
-	if (vote) {
-		throwError('The vote is not existed', 404);
+	if (vote.published !== 0) {
+		throwError('You have no authority to operate this vote.', 404);
 	}
 
 	res.data(vote);

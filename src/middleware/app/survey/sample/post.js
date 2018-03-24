@@ -10,7 +10,8 @@ module.exports = function* createSurveySample(req, res, next) {
 
 	const survey = yield Survey.findOne({
 		where: {
-			id: surveyId
+			id: surveyId,
+			published: 1
 		}
 	});
 
@@ -25,7 +26,7 @@ module.exports = function* createSurveySample(req, res, next) {
 	}
 
 	if (!sample) {
-		throwError('You have post to this survey..', 404);
+		throwError('You have post to this survey.', 404);
 	}
 
 	const surveySample = yield SurveySample.create({

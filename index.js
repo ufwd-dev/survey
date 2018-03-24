@@ -7,6 +7,9 @@ require('./src/model');
 require('express-handler-loader')('ufwd_survey', {
 	pathname: path.resolve(__dirname, './src/middleware')
 });
+require('express-handler-loader')('ufwd_survey_util', {
+	pathname: path.resolve(__dirname, './src/util')
+});
 
 const router = require('./src/router');
 

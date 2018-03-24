@@ -2,19 +2,11 @@
 
 const { throwError } = require('express-handler-loader');
 
-module.exports = function* isSurveyPublished(req, res, next) {
-	const Survey = res.sequelize.model('ufwdSurvey');
-	const surveyId = req.params.surveyId;
+module.exports = function isSurveyPublished(req, res, next) {
+	const survey = res.data();
 
-	const survey = yield Survey.findOne({
-		where: {
-			id: surveyId,
-			published: 0
-		}
-	});
-
-	if (survey) {
-		throwError('The survey is not existed or no authority.', 404);
+	if (survey.published !== 0) {
+		throwError('You have no authority to operate this survey.', 404);
 	}
 
 	res.data(survey);

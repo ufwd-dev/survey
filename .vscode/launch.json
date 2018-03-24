@@ -36,6 +36,25 @@
 			"program": "${workspaceFolder}/launch.js",
 			"cwd": "${workspaceFolder}",
 			"outputCapture": "std"
-		}
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Mocha Tests",
+			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+			"args": [
+				"-u",
+				"tdd",
+				"--timeout",
+				"999999",
+				"--colors",
+				"${workspaceFolder}/test"
+			],
+			"env": {
+				"DEBUG": "*,-mocha:*,-not_this"
+			},
+			"outputCapture": "std",
+			"internalConsoleOptions": "openOnSessionStart"
+		},
     ]
 }
