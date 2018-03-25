@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = function voteResolve(statistic, content, sample) {
+	const sampleList = [];
+
 	if (typeof statistic !== 'object') {
 		throw new Error('The argument 0 required an object');
 	}
@@ -13,17 +15,27 @@ module.exports = function voteResolve(statistic, content, sample) {
 		throw new Error('The argument 2 required an string');
 	}
 
-	sample.split(',').foreach(item => {
+	if (!Array.isArray(content.options)) {
+		throw new Error('The options of the item of argument 1 required an array');
+	}
+
+	sample = content.type === '单选' ? sample.split(',').splice(0, 1) : sample.split(',');
+
+	sample.forEach(element => {
+		if (sampleList.indexOf(element) === -1) {
+			sampleList.push(element);
+		}
+	});
+	
+	sampleList.forEach(item => {
 		if (!statistic[item]) {
+			const option = content.options.find(cotentItem => {
+				return cotentItem.option === item;
+			});
+
 			statistic[item] = {
 				number: 1,
-				content: content.options.foreach(item => {
-					if (item.option === item) {
-						return item.content;
-					}
-
-					throw new Error('The option is not exited.');
-				})
+				content: option ? option.content : undefined
 			};
 		} else {
 			statistic[item].number++;

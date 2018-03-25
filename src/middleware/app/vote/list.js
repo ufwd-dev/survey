@@ -1,6 +1,6 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 const Sequelize = require('sequelize');
 
 module.exports = function* getOwnVoteList(req, res, next) {
@@ -9,7 +9,9 @@ module.exports = function* getOwnVoteList(req, res, next) {
 	const VoteSample = res.sequelize.model('ufwdVoteSample');
 	const accountId = req.session.accountId;
 	const query = {
-		where: {},
+		where: {
+			published: 1
+		},
 		include: [{
 			model: VoteTag
 		}]

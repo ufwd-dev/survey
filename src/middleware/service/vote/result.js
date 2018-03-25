@@ -1,6 +1,6 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 
 module.exports = function getVoteReport(req, res, next) {
 	const vote = res.data();

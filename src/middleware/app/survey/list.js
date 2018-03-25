@@ -1,6 +1,6 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 const Sequelize = require('sequelize');
 
 module.exports = function* getOwnSurveyList(req, res, next) {

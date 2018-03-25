@@ -99,15 +99,14 @@ router.post('/api/ufwd/service/survey', $testBody({
 router.get('/api/ufwd/service/survey', $testQuery({
 	properties: {
 		keyword: {
-			type: 'string',
-			minLength: 4
+			type: 'string'
 		},
 		tag: {
 			type: 'string'
 		},
 		close: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)'
 		},
 		published: {
 			type: 'string',
@@ -177,8 +176,10 @@ router.put('/api/ufwd/service/survey/:surveyId', $testBody({
 router.delete('/api/ufwd/service/survey/:surveyId', getSurvey, isSurveyPublished, deleteSurvey);
 
 router.post('/api/ufwd/service/survey/:surveyId/tag', $testBody({
-	tag: {
-		type: 'string'
+	properties: {
+		tag: {
+			type: 'string'
+		}
 	},
 	require: ['tag'],
 	additionalProperties: false
@@ -189,8 +190,7 @@ router.delete('/api/ufwd/service/survey/tag/:tagId', isAdminiSignedIn, deleteSur
 router.post('/api/ufwd/service/vote', $testBody({
 	properties: {
 		title: {
-			type: 'string',
-			minLength: 4
+			type: 'string'
 		},
 		topic: {
 			type: 'string',
@@ -240,15 +240,14 @@ router.post('/api/ufwd/service/vote', $testBody({
 router.get('/api/ufwd/service/vote', $testQuery({
 	properties: {
 		keyword: {
-			type: 'string',
-			minLength: 4
+			type: 'string'
 		},
 		tag: {
 			type: 'string'
 		},
 		close: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)'
 		},
 		published: {
 			type: 'string',
@@ -317,8 +316,10 @@ router.put('/api/ufwd/service/vote/:voteId', $testBody({
 router.delete('/api/ufwd/service/vote/:voteId', getVote, isVotePublished, deleteVote);
 
 router.post('/api/ufwd/service/vote/:voteId/tag', $testBody({
-	tag: {
-		type: 'string'
+	properties: {
+		tag: {
+			type: 'string'
+		}
 	},
 	require: ['tag'],
 	additionalProperties: false
@@ -327,8 +328,10 @@ router.post('/api/ufwd/service/vote/:voteId/tag', $testBody({
 router.delete('/api/ufwd/service/vote/tag/:tagId', isAdminiSignedIn, deleteVoteTag);
 
 router.put('/api/ufwd/service/vote/:voteId/comment', $testBody({
-	comment: {
-		type: 'string'
+	properties: {
+		comment: {
+			type: 'string'
+		}
 	},
 	additionalProperties: false,
 	required: ['comment']
@@ -345,7 +348,7 @@ router.get('/api/ufwd/app/survey', $testQuery({
 		},
 		close: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)'
 		}
 	},
 	additionalProperties: false
@@ -362,7 +365,7 @@ router.get('/api/ufwd/app/vote', $testQuery({
 		},
 		close: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)'
 		},
 		selft: {
 			type: 'string',
@@ -371,8 +374,6 @@ router.get('/api/ufwd/app/vote', $testQuery({
 	},
 	additionalProperties: false
 }), isAccountSignedIn, getOwnVoteList);
-
-router.get('/api/ufwd/app/vote/:voteId', isAccountSignedIn, getOwnVoteSample);
 
 router.post('/api/ufwd/app/survey/:surveyId/sample', $testBody({
 	properties: {
@@ -389,12 +390,14 @@ router.post('/api/ufwd/app/survey/:surveyId/sample', $testBody({
 						type: 'array',
 						items: {
 							type: 'string',
-						}
+						},
+						uniqueItems: true
 					}
 				},
 				additionalProperties: false,
 				required: ['topicNumber', 'options']
-			}
+			},
+			uniqueItems: true
 		}
 	},
 	required: ['answer'],
@@ -405,6 +408,7 @@ router.post('/api/ufwd/app/vote/:voteId/sample', $testBody({
 	properties: {
 		answer: {
 			type: 'string',
+			pattern: '(^[A-Za-z]{1}[,A-Za-z]*$)'
 		}
 	},
 	required: ['answer'],
@@ -412,6 +416,8 @@ router.post('/api/ufwd/app/vote/:voteId/sample', $testBody({
 }), isAdminiSignedIn, createVoteSample);
 
 router.get('/api/ufwd/service/survey/:surveyId/sample', isAdminiSignedIn, getSurvey, getSurveySample);
+
+router.get('/api/ufwd/app/vote/:voteId/sample', isAccountSignedIn, getOwnVoteSample);
 
 router.get('/api/ufwd/service/vote/:voteId/report', isAdminiSignedIn, getVote, getVoteReport);
 

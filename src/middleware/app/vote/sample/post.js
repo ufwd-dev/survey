@@ -1,6 +1,6 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 const { voteResolve } = require('express-handler-loader')('ufwd_survey_util');
 
 module.exports = function* createVoteSample(req, res, next) {
@@ -26,20 +26,26 @@ module.exports = function* createVoteSample(req, res, next) {
 		throwError('The vote is not existed.', 404);
 	}
 
-	if (!sample) {
+	if (Date.parse(vote.time) < new Date()) {
+		throwError('The vote is closed.', 404);
+	}
+
+	if (sample) {
 		throwError('You have post to this vote.', 404);
 	}
 
 
 	const voteSample = yield VoteSample.create({
-		accountId, vote,
+		accountId, voteId,
 		answer: req.body.answer
 	});
 
-	const statistic = voteResolve({}, vote.content, voteSample);
+	vote.statistic ? undefined : vote.statistic = {};
+
+	const statistic = voteResolve(vote.statistic, vote.content, req.body.answer);
 
 	const result = yield vote.update({
-		count: vote.count++,
+		count: vote.count + 1,
 		statistic
 	});
 

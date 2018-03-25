@@ -1,10 +1,10 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 
 module.exports = function* createSurveySample(req, res, next) {
-	const  SurveySample = res.sequelize.model('ufwdSurveySample');
-	const  Survey = res.sequelize.model('ufwdSurvey');
+	const SurveySample = res.sequelize.model('ufwdSurveySample');
+	const Survey = res.sequelize.model('ufwdSurvey');
 	const surveyId = req.params.surveyId;
 	const accountId = req.session.accountId;
 
@@ -25,7 +25,11 @@ module.exports = function* createSurveySample(req, res, next) {
 		throwError('The survey is not existed.', 404);
 	}
 
-	if (!sample) {
+	if (Date.parse(survey.time) < new Date()) {
+		throwError('The survey is closed.', 404);
+	}
+
+	if (sample) {
 		throwError('You have post to this survey.', 404);
 	}
 

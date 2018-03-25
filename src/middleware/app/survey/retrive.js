@@ -1,6 +1,6 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 
 module.exports = function getUnexpiredSurvey(req, res, next) {
 	const survey = res.data();
@@ -9,8 +9,8 @@ module.exports = function getUnexpiredSurvey(req, res, next) {
 		throwError('The survey is not existed.', 404);
 	}
 
-	if (Date.parse(survey.time) <= new Date()) {
-		throwError('The survey out od date.', 404);
+	if (Date.parse(survey.time) < new Date()) {
+		throwError('The survey is closed.', 404);
 	}
 
 	res.data(survey);

@@ -1,6 +1,6 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 
 module.exports = function isSurveyPublished(req, res, next) {
 	const survey = res.data();

@@ -5,13 +5,51 @@ service:
 创建一个投票
 ```
 {
-    title: string,
-    topic: string,
-    options: string,
-    statistic: text,
-    time: date,
-    rule: string,
-    published: tinyint(0, 1)
+    title: {
+			type: 'string',
+			minLength: 4
+		},
+		topic: {
+			type: 'string',
+			minLength: 4
+		},
+		rule: {
+			type: 'string'
+		},
+		time: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		content: {
+			type: 'object',
+			properties: {
+				type: {
+					type: 'string'
+				},
+				options: {
+					type: 'array',
+					items: {
+						type: 'object',
+						properties: {
+							option: {
+								type: 'string'
+							},
+							content: {
+								type: 'string'
+							}
+						},
+						additionalProperties: false,
+						required: ['option', 'content']
+					}
+				}
+			}
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	}
 }
 ```
 
@@ -25,8 +63,54 @@ service:
 修改某个投票状态
 ```
 {
-    time: date,
-    published: tinyint(0, 1)
+   title: {
+			type: 'string',
+			minLength: 4
+		},
+		topic: {
+			type: 'string',
+			minLength: 4
+		},
+		rule: {
+			type: 'string'
+		},
+		time: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		content: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					type: {
+						type: 'string'
+					},
+					options: {
+						type: 'array',
+						items: {
+							type: 'object',
+							properties: {
+								option: {
+									type: 'string'
+								},
+								content: {
+									type: 'string'
+								}
+							},
+							additionalProperties: false,
+							required: ['option', 'content']
+						}
+					}
+				}
+			}
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	}
 }
 ```
 
@@ -58,12 +142,55 @@ service:
 ## POST /api/ufwd/service/survey
 创建一个问卷
 {
-    title: string,
-    rule: string,
-    time: date,
-    statistic: TEXT,
-    content: TEXT,
-    published: tinyint(0, 1)
+        title: {
+			type: 'string',
+			minLength: 4
+		},
+		rule: {
+			type: 'string'
+		},
+		time: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		content: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					topic: {
+						type: 'string'
+					},
+					type: {
+						type: 'string'
+					},
+					options: {
+						type: 'array',
+						items: {
+							type: 'object',
+							properties: {
+								option: {
+									type: 'string'
+								},
+								content: {
+									type: 'string'
+								}
+							},
+							additionalProperties: false,
+							required: ['option', 'content']
+						}
+					}
+				},
+				additionalProperties: false,
+				required: ['topic', 'type', 'options']
+			}
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	}
 }
 
 ## GET /api/ufwd/service/survey?keyword=string&close=date&tag=string&publised=tinyint
@@ -76,8 +203,55 @@ service:
 修改某个的问卷(当问卷未发布时)
 ```
 {
-    time: date,
-    published: tinyint
+    title: {
+			type: 'string',
+			minLength: 4
+		},
+		rule: {
+			type: 'string'
+		},
+		time: {
+			type: 'string',
+			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+		},
+		content: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					topic: {
+						type: 'string'
+					},
+					type: {
+						type: 'string'
+					},
+					options: {
+						type: 'array',
+						items: {
+							type: 'object',
+							properties: {
+								option: {
+									type: 'string'
+								},
+								content: {
+									type: 'string'
+								}
+							},
+							additionalProperties: false,
+							required: ['option', 'content']
+						}
+					}
+				},
+				additionalProperties: false,
+				required: ['topic', 'type', 'options']
+			}
+		},
+		published: {
+			type: 'string',
+			pattern: '(^0$|^1$)'
+
+		}
+	}
 }
 ```
 
@@ -126,7 +300,26 @@ app:
 提交问卷填写
 ```
 {
-    answer: TEXT
+    answer: {
+        type: 'array',
+        items: {
+            type: 'object',
+            properties: {
+                topicNumber: {
+                    type: 'number',
+                    mininum: 1
+                },
+                options: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                    }
+                }
+            },
+            additionalProperties: false,
+            required: ['topicNumber', 'options']
+        }
+    }
 }
 ```
 ## ADDED

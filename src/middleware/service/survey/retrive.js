@@ -1,6 +1,6 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 
 module.exports = function* getSurvey(req, res, next) {
 	const Survey = res.sequelize.model('ufwdSurvey');
@@ -16,7 +16,7 @@ module.exports = function* getSurvey(req, res, next) {
 		}]
 	});
 
-	if (survey) {
+	if (!survey) {
 		throwError('The survey is not existed', 404);
 	}
 

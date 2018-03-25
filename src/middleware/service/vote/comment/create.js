@@ -1,6 +1,6 @@
 'use strict';
 
-const { throwError } = require('express-handler-loader');
+const { throwError } = require('error-standardize');
 
 module.exports = function* createComment(req, res, next) {
 	const Vote = res.sequelize.model('ufwdVote');
@@ -13,7 +13,7 @@ module.exports = function* createComment(req, res, next) {
 		}
 	});
 
-	if (vote) {
+	if (!vote) {
 		throwError('The vote is not existed', 404);
 	}
 
