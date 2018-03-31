@@ -1,7 +1,6 @@
 'use strict';
 
 const { throwError } = require('error-standardize');
-const { voteResolve } = require('express-handler-loader')('ufwd_survey_util');
 
 module.exports = function* createVoteSample(req, res, next) {
 	const  VoteSample = res.sequelize.model('ufwdVoteSample');
@@ -40,20 +39,17 @@ module.exports = function* createVoteSample(req, res, next) {
 		answer: req.body.answer
 	});
 
-	vote.statistic ? undefined : vote.statistic = {};
-
-	const statistic = voteResolve(vote.statistic, vote.content, req.body.answer);
-
 	const result = yield vote.update({
 		count: vote.count + 1,
-		statistic
 	});
 
+	const statistic = yield vote.getVoteStatistic();
+
 	res.data({
-		topic: result.topic,
-		statistic,
+		options: vote.options,
 		count: result.count,
-		ownSample: voteSample
+		statistic,
+		sample: voteSample.answer
 	});
 
 	next();

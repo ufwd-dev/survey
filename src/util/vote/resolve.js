@@ -1,46 +1,77 @@
 'use strict';
 
-module.exports = function voteResolve(statistic, content, sample) {
-	const sampleList = [];
+function VoteFactory(options = [], range = '0', number = 1) {
 
-	if (typeof statistic !== 'object') {
-		throw new Error('The argument 0 required an object');
+	range === '0' ? range = '=' : undefined;
+
+	range === '1' ? range = '>=' : undefined;
+
+	range === '-1' ? range = '<=' : undefined;
+
+	return new Vote(options, range, number);
+}
+
+class Vote {
+	constructor(options, range, number) {
+		this.range = range;
+		this.number = number;
+		this.options = options;
 	}
 
-	if (typeof content !== 'object') {
-		throw new Error('The argument 1 required an object');
-	}
+	analyze(sampleList = []) {
+		this.validate(sampleList);
+		
+		const newList = this.filter(sampleList);
 
-	if (typeof sample !== 'string') {
-		throw new Error('The argument 2 required an string');
-	}
+		let statistic = new Array(this.options.length).fill(0);
 
-	if (!Array.isArray(content.options)) {
-		throw new Error('The options of the item of argument 1 required an array');
-	}
+		newList.forEach(sample => {
+			statistic = statistic.map((item,index) => {
+				if (sample[index] === 0 || sample[index] === 1) {
 
-	sample = content.type === '单选' ? sample.split(',').splice(0, 1) : sample.split(',');
+					item = item + sample[index];
+				}
 
-	sample.forEach(element => {
-		if (sampleList.indexOf(element) === -1) {
-			sampleList.push(element);
-		}
-	});
-	
-	sampleList.forEach(item => {
-		if (!statistic[item]) {
-			const option = content.options.find(cotentItem => {
-				return cotentItem.option === item;
+				return item;
 			});
+		});
 
-			statistic[item] = {
-				number: 1,
-				content: option ? option.content : undefined
-			};
-		} else {
-			statistic[item].number++;
+		return statistic;
+	}
+
+	validate(answer) {
+
+		if (!Array.isArray(answer)) {
+			throw new Error('The argument 0 should be an array.');
 		}
-	});
 
-	return statistic;
-};
+		if (answer.length === 0) {
+			return false;
+		}
+
+		answer.forEach(item => {
+			if (!Array.isArray(item)) {
+				throw new Error('The item of argument 0 should be an array.');
+			}
+		});
+	}
+
+	filter(answer) {
+
+		const newAnswer = answer.filter(item => {
+	
+			const length = item.filter(element => {
+				return element === 1;
+			}).length;
+			
+			return (item.length === this.options.length) && (this.number === 0 && length !== 0 || this.number === 1 && length === 1 ||
+				this.number !== 0 && this.number !== 1 && (this.range == '<=' && length <= this.number || this.range == '=' && length === this.number ||
+				this.range == '>=' && length >= this.number));
+		});
+
+		return newAnswer;
+
+	}
+}
+
+module.exports = { VoteFactory };

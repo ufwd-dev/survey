@@ -1,7 +1,5 @@
 'use strict';
 
-// require('./insert');
-
 const UfwdAccount = require('lemonitor-service').sequelize.model('ufwdAccount');
 const { Survey, SurveyTag, SurveySample } = require('./survey');
 const { Vote, VoteTag, VoteSample } = require('./vote');

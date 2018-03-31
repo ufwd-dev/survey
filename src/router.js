@@ -59,31 +59,23 @@ router.post('/api/ufwd/service/survey', $testBody({
 			items: {
 				type: 'object',
 				properties: {
-					topic: {
+					question: {
 						type: 'string'
 					},
-					type: {
-						type: 'string'
+					number: {
+						type: 'number',
+						minimum: 0
+					},
+					range: {
+						type: 'string',
+						pattern: '(^-1$|^0$|^1$)'
 					},
 					options: {
-						type: 'array',
-						items: {
-							type: 'object',
-							properties: {
-								option: {
-									type: 'string'
-								},
-								content: {
-									type: 'string'
-								}
-							},
-							additionalProperties: false,
-							required: ['option', 'content']
-						}
+						type: 'array'
 					}
 				},
 				additionalProperties: false,
-				required: ['topic', 'type', 'options']
+				required: ['question', 'options']
 			}
 		},
 		published: {
@@ -137,31 +129,23 @@ router.put('/api/ufwd/service/survey/:surveyId', $testBody({
 			items: {
 				type: 'object',
 				properties: {
-					topic: {
+					question: {
 						type: 'string'
 					},
-					type: {
-						type: 'string'
+					number: {
+						type: 'number',
+						minimum: 0
+					},
+					range: {
+						type: 'string',
+						pattern: '(^-1$|^0$|^1$)'
 					},
 					options: {
-						type: 'array',
-						items: {
-							type: 'object',
-							properties: {
-								option: {
-									type: 'string'
-								},
-								content: {
-									type: 'string'
-								}
-							},
-							additionalProperties: false,
-							required: ['option', 'content']
-						}
+						type: 'array'
 					}
 				},
 				additionalProperties: false,
-				required: ['topic', 'type', 'options']
+				required: ['question', 'options']
 			}
 		},
 		published: {
@@ -192,7 +176,7 @@ router.post('/api/ufwd/service/vote', $testBody({
 		title: {
 			type: 'string'
 		},
-		topic: {
+		question: {
 			type: 'string',
 			minLength: 4
 		},
@@ -203,29 +187,19 @@ router.post('/api/ufwd/service/vote', $testBody({
 			type: 'string',
 			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
 		},
-		content: {
-			type: 'object',
-			properties: {
-				type: {
-					type: 'string'
-				},
-				options: {
-					type: 'array',
-					items: {
-						type: 'object',
-						properties: {
-							option: {
-								type: 'string'
-							},
-							content: {
-								type: 'string'
-							}
-						},
-						additionalProperties: false,
-						required: ['option', 'content']
-					}
-				}
+		options: {
+			type: 'array',
+			items: {
+				type: 'string'
 			}
+		},
+		number: {
+			type: 'number',
+			minimum: 0
+		},
+		range: {
+			type: 'string',
+			pattern: '(^-1$|^0$|^1$)'
 		},
 		published: {
 			type: 'string',
@@ -233,7 +207,7 @@ router.post('/api/ufwd/service/vote', $testBody({
 
 		}
 	},
-	required: ['title', 'topic', 'rule', 'time', 'content', 'published'],
+	required: ['title', 'question', 'rule', 'time', 'options', 'published'],
 	additionalProperties: false
 }), isAdminiSignedIn, createVote);
 
@@ -266,7 +240,7 @@ router.put('/api/ufwd/service/vote/:voteId', $testBody({
 			type: 'string',
 			minLength: 4
 		},
-		topic: {
+		question: {
 			type: 'string',
 			minLength: 4
 		},
@@ -277,32 +251,19 @@ router.put('/api/ufwd/service/vote/:voteId', $testBody({
 			type: 'string',
 			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
 		},
-		content: {
+		options: {
 			type: 'array',
 			items: {
-				type: 'object',
-				properties: {
-					type: {
-						type: 'string'
-					},
-					options: {
-						type: 'array',
-						items: {
-							type: 'object',
-							properties: {
-								option: {
-									type: 'string'
-								},
-								content: {
-									type: 'string'
-								}
-							},
-							additionalProperties: false,
-							required: ['option', 'content']
-						}
-					}
-				}
+				type: 'string'
 			}
+		},
+		number: {
+			type: 'number',
+			minimum: 0
+		},
+		range: {
+			type: 'string',
+			pattern: '(^-1$|^0$|^1$)'
 		},
 		published: {
 			type: 'string',
@@ -380,24 +341,13 @@ router.post('/api/ufwd/app/survey/:surveyId/sample', $testBody({
 		answer: {
 			type: 'array',
 			items: {
-				type: 'object',
-				properties: {
-					topicNumber: {
-						type: 'number',
-						mininum: 1
-					},
-					options: {
-						type: 'array',
-						items: {
-							type: 'string',
-						},
-						uniqueItems: true
-					}
-				},
-				additionalProperties: false,
-				required: ['topicNumber', 'options']
-			},
-			uniqueItems: true
+				type: 'array',
+				items: {
+					type: 'number',
+					minimum: 0,
+					maximum: 1
+				}
+			}
 		}
 	},
 	required: ['answer'],
@@ -407,8 +357,12 @@ router.post('/api/ufwd/app/survey/:surveyId/sample', $testBody({
 router.post('/api/ufwd/app/vote/:voteId/sample', $testBody({
 	properties: {
 		answer: {
-			type: 'string',
-			pattern: '(^[A-Za-z]{1}[,A-Za-z]*$)'
+			type: 'array',
+			items: {
+				type: 'number',
+				minimum: 0,
+				maximum: 1
+			}
 		}
 	},
 	required: ['answer'],

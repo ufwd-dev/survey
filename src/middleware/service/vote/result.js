@@ -1,15 +1,16 @@
 'use strict';
 
-const { throwError } = require('error-standardize');
-
-module.exports = function getVoteReport(req, res, next) {
+module.exports = function* getVoteReport(req, res, next) {
 	const vote = res.data();
 	
-	if (!vote.statistic) {
-		throwError('The sattistic of vote is not exsited.', 404);
-	}
+	const statistic = yield vote.getVoteStatistic();
 
-	res.data(vote.statistic);
+	res.data({
+		title: vote.title,
+		question: vote.question,
+		options: vote.options,
+		statistic
+	});
 
 	next();
 };
