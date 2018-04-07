@@ -11,7 +11,7 @@ module.exports = function* createSurveySample(req, res, next) {
 	const survey = yield Survey.findOne({
 		where: {
 			id: surveyId,
-			published: 1
+			published: true
 		}
 	});
 
@@ -25,7 +25,7 @@ module.exports = function* createSurveySample(req, res, next) {
 		throwError('The survey is not existed.', 404);
 	}
 
-	if (Date.parse(survey.time) < new Date()) {
+	if (Date.parse(survey.time) < Date.parse(new Date())) {
 		throwError('The survey is closed.', 404);
 	}
 

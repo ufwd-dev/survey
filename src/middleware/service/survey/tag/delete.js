@@ -14,7 +14,7 @@ module.exports = function* deleteSurveyTag(req, res, next) {
 		include: [{
 			model: Survey,
 			where: {
-				published: 0
+				published: false
 			}
 		}]
 	});

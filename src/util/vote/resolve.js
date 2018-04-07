@@ -1,20 +1,17 @@
 'use strict';
 
-function VoteFactory(options = [], range = '0', number = 1) {
+const {Range} = require('../range');
 
-	range === '0' ? range = '=' : undefined;
+function VoteFactory(range, options) {
 
-	range === '1' ? range = '>=' : undefined;
+	const rangeObject = new Range(options.length, range);
 
-	range === '-1' ? range = '<=' : undefined;
-
-	return new Vote(options, range, number);
+	return new Vote(options, rangeObject);
 }
 
 class Vote {
-	constructor(options, range, number) {
+	constructor(options, range) {
 		this.range = range;
-		this.number = number;
 		this.options = options;
 	}
 
@@ -64,9 +61,7 @@ class Vote {
 				return element === 1;
 			}).length;
 			
-			return (item.length === this.options.length) && (this.number === 0 && length !== 0 || this.number === 1 && length === 1 ||
-				this.number !== 0 && this.number !== 1 && (this.range == '<=' && length <= this.number || this.range == '=' && length === this.number ||
-				this.range == '>=' && length >= this.number));
+			return this.range.validateSample(length)  && item.length === this.options.length;
 		});
 
 		return newAnswer;

@@ -5,51 +5,35 @@ service:
 创建一个投票
 ```
 {
-    title: {
-			type: 'string',
-			minLength: 4
-		},
-		topic: {
-			type: 'string',
-			minLength: 4
-		},
-		rule: {
+	title: {
+		type: 'string'
+	},
+	question: {
+		type: 'string',
+		minLength: 4
+	},
+	rule: {
+		type: 'string'
+	},
+	time: {
+		type: 'string',
+		format: 'date-time'
+	},
+	options: {
+		type: 'array',
+		items: {
 			type: 'string'
-		},
-		time: {
-			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
-		},
-		content: {
-			type: 'object',
-			properties: {
-				type: {
-					type: 'string'
-				},
-				options: {
-					type: 'array',
-					items: {
-						type: 'object',
-						properties: {
-							option: {
-								type: 'string'
-							},
-							content: {
-								type: 'string'
-							}
-						},
-						additionalProperties: false,
-						required: ['option', 'content']
-					}
-				}
-			}
-		},
-		published: {
-			type: 'string',
-			pattern: '(^0$|^1$)'
-
 		}
+	},
+	range: {
+		type: 'string',
+		pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
+	},
+	published: {
+		type: 'string',
+		pattern: '^(true|false)$'
 	}
+
 }
 ```
 
@@ -60,14 +44,13 @@ service:
 查看某个投票
 
 ## PUT /api/ufwd/service/vote/:voteId
-修改某个投票状态
+修改某个投票（未发布的）
 ```
 {
-   title: {
-			type: 'string',
-			minLength: 4
+   		title: {
+			type: 'string'
 		},
-		topic: {
+		question: {
 			type: 'string',
 			minLength: 4
 		},
@@ -76,41 +59,23 @@ service:
 		},
 		time: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			format: 'date-time'
 		},
-		content: {
+		options: {
 			type: 'array',
 			items: {
-				type: 'object',
-				properties: {
-					type: {
-						type: 'string'
-					},
-					options: {
-						type: 'array',
-						items: {
-							type: 'object',
-							properties: {
-								option: {
-									type: 'string'
-								},
-								content: {
-									type: 'string'
-								}
-							},
-							additionalProperties: false,
-							required: ['option', 'content']
-						}
-					}
-				}
+				type: 'string'
 			}
+		},
+		range: {
+			type: 'string',
+			pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
-	}
 }
 ```
 
@@ -132,9 +97,20 @@ service:
     tagName: string
 }
 ```
+
+## PUT /api/ufwd/service/vote/:voteId/time
+修改某个投票结束时间
+```
+{
+	time: {
+		type: 'string',
+		format: 'date-time'
+	}
+}
+```
 ## ADD
-## DELETE /api/ufwd/service/survey/:surveyId/tag
-给某个问卷删除标签
+## DELETE /api/ufwd/service/vote/:voteId/tag
+给某个投票删除标签
 
 ## GET /api/ufwd/service/vote/:voteId/report
 查询投票的结果
@@ -151,49 +127,37 @@ service:
 		},
 		time: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			pattern: 'date-time'
 		},
 		content: {
 			type: 'array',
 			items: {
 				type: 'object',
 				properties: {
-					topic: {
+					question: {
 						type: 'string'
 					},
-					type: {
-						type: 'string'
+					range: {
+						type: 'string',
+						pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 					},
 					options: {
-						type: 'array',
-						items: {
-							type: 'object',
-							properties: {
-								option: {
-									type: 'string'
-								},
-								content: {
-									type: 'string'
-								}
-							},
-							additionalProperties: false,
-							required: ['option', 'content']
-						}
+						type: 'array'
 					}
 				},
 				additionalProperties: false,
-				required: ['topic', 'type', 'options']
+				required: ['question', 'options']
 			}
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
 	}
 }
 
-## GET /api/ufwd/service/survey?keyword=string&close=date&tag=string&publised=tinyint
+## GET /api/ufwd/service/survey?keyword=string&close=date&tag=string&publised=boolean
 查看所有的问卷
 
 ## GET /api/ufwd/service/survey/:surveyId
@@ -212,43 +176,31 @@ service:
 		},
 		time: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			pattern: 'date-time'
 		},
 		content: {
 			type: 'array',
 			items: {
 				type: 'object',
 				properties: {
-					topic: {
+					question: {
 						type: 'string'
 					},
-					type: {
-						type: 'string'
+					range: {
+						type: 'string',
+						pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 					},
 					options: {
-						type: 'array',
-						items: {
-							type: 'object',
-							properties: {
-								option: {
-									type: 'string'
-								},
-								content: {
-									type: 'string'
-								}
-							},
-							additionalProperties: false,
-							required: ['option', 'content']
-						}
+						type: 'array'
 					}
 				},
 				additionalProperties: false,
-				required: ['topic', 'type', 'options']
+				required: ['question', 'options']
 			}
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
 	}
@@ -272,6 +224,17 @@ service:
 ## GET /api/ufwd/service/survey/:surveyId/sample
 查看某个问卷填写情况
 
+## PUT /api/ufwd/service/survey/:surveyId/time
+修改某个问卷结束时间
+```
+{
+	time: {
+		type: 'string',
+		format: 'date-time'
+	}
+}
+```
+
 app:
 ======================================
 
@@ -279,10 +242,17 @@ app:
 查看所有的投票
 
 ## POST /api/ufwd/app/vote/:voteId/sample
-提交某个投票
+提交某个投票的回复
 ```
 {
-    answer: string
+    answer: {
+		type: 'array',
+		items: {
+			type: 'number',
+			minimum: 0,
+			maximum: 1
+		}
+	}
 }
 ```
 
@@ -301,24 +271,17 @@ app:
 ```
 {
     answer: {
-        type: 'array',
-        items: {
-            type: 'object',
-            properties: {
-                topicNumber: {
-                    type: 'number',
-                    mininum: 1
-                },
-                options: {
-                    type: 'array',
-                    items: {
-                        type: 'string',
-                    }
-                }
-            },
-            additionalProperties: false,
-            required: ['topicNumber', 'options']
-        }
+       answer: {
+			type: 'array',
+			items: {
+				type: 'array',
+				items: {
+					type: 'number',
+					minimum: 0,
+					maximum: 1
+				}
+			}
+		}
     }
 }
 ```

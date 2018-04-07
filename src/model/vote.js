@@ -13,15 +13,10 @@ const Vote = sequelize.define('ufwdVote', {
 		type: Sequelize.STRING,
 		allowNull: false
 	},
-	number: {
-		type: Sequelize.INTEGER,
-		allowNull: false,
-		defaultValue: 1
-	},
 	range: {
-		type: Sequelize.ENUM('-1', '0', '1'),
+		type: Sequelize.STRING,
 		allowNull: false,
-		defaultValue: '0'
+		defaultValue: '1'
 	},
 	options: {
 		type: Sequelize.JSON,
@@ -40,8 +35,16 @@ const Vote = sequelize.define('ufwdVote', {
 	},
 	published: {
 		type: Sequelize.TINYINT,
-		allowNull: false,
-		defaultValue: 0
+		defaultValue: 0,
+		set(published) {
+
+			published === 'true' ? this.setDataValue('published', 1) : this.setDataValue('published', 0);
+		},
+		get() {
+			const published = this.getDataValue('published');
+
+			return published === 1 ? true : false;
+		}
 	},
 	count: {
 		type: Sequelize.INTEGER,
@@ -58,14 +61,6 @@ const Vote = sequelize.define('ufwdVote', {
 Vote.prototype.getVoteStatistic = function () {
 	const sampList = [];
 
-	if (!/^[-]1$|^0$|^1$/.test(this.range)) {
-		throw new Error('The range of vote is illegal.');
-	}
-
-	if (typeof this.number !== 'number' || this.number < 0) {
-		throw new Error('The number of vote should be a number and must greater than 0.');
-	}
-	
 	if (!Array.isArray(this.options)) {
 		throw new Error('The options of vote should be an array.');
 	}
@@ -80,7 +75,7 @@ Vote.prototype.getVoteStatistic = function () {
 			sampList.push(item.answer);
 		});
 		
-		const voteObject = VoteFactory(this.options, this.range, this.number);
+		const voteObject = VoteFactory(this.range, this.options);
 		
 		return voteObject.analyze(sampList);
 	});

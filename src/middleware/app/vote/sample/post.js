@@ -11,7 +11,7 @@ module.exports = function* createVoteSample(req, res, next) {
 	const vote = yield Vote.findOne({
 		where: {
 			id: voteId,
-			published: 1
+			published: true
 		}
 	});
 
@@ -25,7 +25,7 @@ module.exports = function* createVoteSample(req, res, next) {
 		throwError('The vote is not existed.', 404);
 	}
 
-	if (Date.parse(vote.time) < new Date()) {
+	if (Date.parse(vote.time) < Date.parse(new Date())) {
 		throwError('The vote is closed.', 404);
 	}
 

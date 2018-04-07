@@ -27,7 +27,15 @@ const Survey = sequelize.define('ufwdSurvey', {
 	published: {
 		type: Sequelize.TINYINT,
 		allowNull: false,
-		defaultValue: 0
+		defaultValue: 0,
+		set(published) {
+			published === 'true' ? this.setDataValue('published', 1) : this.setDataValue('published', 0);
+		},
+		get() {
+			const published = this.getDataValue('published');
+
+			return published === 1 ? true : false;
+		}
 	}
 }, {
 	paranoid: true
@@ -54,11 +62,7 @@ Survey.prototype.getStatistic = function () {
 			throw new Error('The options of item should be an array.');
 		}
 
-		if (item.range && !/^[-]1$|^0$|^1$/.test(item.range)) {
-			throw new Error('The range of item is illegal.');
-		}
-
-		if (item.number && (typeof item.number !== 'number' || item.number < 0)) {
+		if (item.range && typeof item.range !== 'string') {
 			throw new Error('The range of item is illegal.');
 		}
 	});

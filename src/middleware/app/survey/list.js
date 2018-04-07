@@ -8,7 +8,7 @@ module.exports = function* getOwnSurveyList(req, res, next) {
 	const SurveyTag = res.sequelize.model('ufwdSurveyTag');
 	const query = {
 		where: {
-			published: 1
+			published: true
 		},
 		include: [{
 			model: SurveyTag

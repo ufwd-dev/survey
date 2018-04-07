@@ -1,37 +1,30 @@
 'use strict';
 
+const {Range} = require('../range');
+
 function SurveyFactory(content) {
 
-	const survey = [];
+	const itemList = [];
 
 	content.forEach(item => {
-		item.range === '0' ? item.range = '=' : undefined;
+		const range = new Range(item.options.length, item.range);
 
-		item.range === '1' ? item.range = '>=' : undefined;
-
-		item.range === '-1' ? item.range = '<=' : undefined;
-
-		survey.push(SurveyItemFactory(item.options, item.range, item.number));
+		itemList.push(new SurveyItem(item.options, range));
 	});
 
-	return new Survey(survey);
-}
-
-function SurveyItemFactory(options = [], range = '=', number = 1) {
-
-	return new SurveyItem(options, range, number);
+	return new Survey(itemList);
 }
 
 class Survey {
 	constructor(itemList) {
-		this.survey = itemList;
+		this.itemList = itemList;
 	}
 
 	analyze(surveySampleList) {
 		this.validate(surveySampleList);
 
 		const newSurveySampleList = this.filter(surveySampleList);
-		const sampleList = new Array(this.survey.length).fill(new Array());
+		const sampleList = new Array(this.itemList.length).fill(new Array());
 		const statistic = [];
 	
 		sampleList.forEach((itemSampleList, i, sampleList) => {
@@ -44,7 +37,7 @@ class Survey {
 				sampleList[i] = container;
 			});
 
-			statistic.push(this.survey[i].analyze(sampleList[i]));
+			statistic.push(this.itemList[i].analyze(sampleList[i]));
 		});
 
 		return statistic;
@@ -52,7 +45,7 @@ class Survey {
 
 	filter(surveySampleList) {
 		return surveySampleList.filter(sample => {
-			return this.survey.length === sample.length;
+			return this.itemList.length === sample.length;
 		});
 	}
 
@@ -78,10 +71,9 @@ class Survey {
 }
 
 class SurveyItem {
-	constructor(options, range, number) {
+	constructor(options, range) {
 		this.options = options;
 		this.range = range;
-		this.number = number;
 	}
 
 	analyze(itemSampleList) {
@@ -128,11 +120,8 @@ class SurveyItem {
 				return element === 1;
 			}).length;
 			
-			return (item.length === this.options.length) && (this.number === 0 && length !== 0 || this.number === 1 && length === 1 ||
-				this.number !== 0 && this.number !== 1 && (this.range == '<=' && length <= this.number || this.range == '=' && length === this.number ||
-				this.range == '>=' && length >= this.number));
+			return this.range.validateSample(length) && item.length === this.options.length;
 
-				
 		});
 
 		return newItemSampleList;
@@ -140,4 +129,4 @@ class SurveyItem {
 	}
 }
 
-module.exports = { SurveyFactory, SurveyItemFactory };
+module.exports = { SurveyFactory, SurveyItem };

@@ -14,7 +14,7 @@ module.exports = function* deleteVoteTag(req, res, next) {
 		include: [{
 			model: Vote,
 			where: {
-				published: 0
+				published: false
 			}
 		}]
 	});

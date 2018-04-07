@@ -9,7 +9,7 @@ module.exports = function* createComment(req, res, next) {
 	const vote = yield Vote.findOne({
 		where: {
 			id: voteId,
-			published: 1
+			published: true
 		}
 	});
 

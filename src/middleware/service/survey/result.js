@@ -12,7 +12,7 @@ module.exports = function* getSurveySample(req, res, next) {
 		}
 	});
 
-	if (Date.parse(survey.time) > new Date()) {
+	if (Date.parse(survey.time) > Date.parse(new Date())) {
 		throwError('The survey is not closed', 404);
 	}
 

@@ -14,6 +14,7 @@ const {
 	createSurvey,
 	getSurveyList,
 	getSurvey,
+	modifySurveyTime,
 	isSurveyPublished,
 	updateSurvey,
 	deleteSurvey,
@@ -22,6 +23,7 @@ const {
 	createVote,
 	getVoteList,
 	getVote,
+	modifyVoteTime,
 	updateVote,
 	deleteVote,
 	isVotePublished,
@@ -52,7 +54,7 @@ router.post('/api/ufwd/service/survey', $testBody({
 		},
 		time: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			format: 'date-time'
 		},
 		content: {
 			type: 'array',
@@ -62,13 +64,9 @@ router.post('/api/ufwd/service/survey', $testBody({
 					question: {
 						type: 'string'
 					},
-					number: {
-						type: 'number',
-						minimum: 0
-					},
 					range: {
 						type: 'string',
-						pattern: '(^-1$|^0$|^1$)'
+						pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 					},
 					options: {
 						type: 'array'
@@ -80,11 +78,11 @@ router.post('/api/ufwd/service/survey', $testBody({
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
 	},
-	required: ['title', 'rule', 'time', 'content', 'published'],
+	required: ['title', 'rule', 'time', 'content'],
 	additionalProperties: false
 }), isAdminiSignedIn, createSurvey);
 
@@ -98,11 +96,11 @@ router.get('/api/ufwd/service/survey', $testQuery({
 		},
 		close: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)'
+			format: 'date-time'
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
 	},
@@ -122,7 +120,7 @@ router.put('/api/ufwd/service/survey/:surveyId', $testBody({
 		},
 		time: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			format: 'date-time'
 		},
 		content: {
 			type: 'array',
@@ -132,13 +130,9 @@ router.put('/api/ufwd/service/survey/:surveyId', $testBody({
 					question: {
 						type: 'string'
 					},
-					number: {
-						type: 'number',
-						minimum: 0
-					},
 					range: {
 						type: 'string',
-						pattern: '(^-1$|^0$|^1$)'
+						pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 					},
 					options: {
 						type: 'array'
@@ -150,7 +144,7 @@ router.put('/api/ufwd/service/survey/:surveyId', $testBody({
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
 	},
@@ -185,7 +179,7 @@ router.post('/api/ufwd/service/vote', $testBody({
 		},
 		time: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			format: 'date-time'
 		},
 		options: {
 			type: 'array',
@@ -193,21 +187,17 @@ router.post('/api/ufwd/service/vote', $testBody({
 				type: 'string'
 			}
 		},
-		number: {
-			type: 'number',
-			minimum: 0
-		},
 		range: {
 			type: 'string',
-			pattern: '(^-1$|^0$|^1$)'
+			pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
 	},
-	required: ['title', 'question', 'rule', 'time', 'options', 'published'],
+	required: ['title', 'question', 'rule', 'time', 'options', 'range', 'published'],
 	additionalProperties: false
 }), isAdminiSignedIn, createVote);
 
@@ -221,11 +211,11 @@ router.get('/api/ufwd/service/vote', $testQuery({
 		},
 		close: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)'
+			format: 'date-time'
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
 	},
@@ -249,7 +239,7 @@ router.put('/api/ufwd/service/vote/:voteId', $testBody({
 		},
 		time: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ((1|0)[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$)'
+			format: 'date-time'
 		},
 		options: {
 			type: 'array',
@@ -257,22 +247,40 @@ router.put('/api/ufwd/service/vote/:voteId', $testBody({
 				type: 'string'
 			}
 		},
-		number: {
-			type: 'number',
-			minimum: 0
-		},
 		range: {
 			type: 'string',
-			pattern: '(^-1$|^0$|^1$)'
+			pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 		},
 		published: {
 			type: 'string',
-			pattern: '(^0$|^1$)'
+			pattern: '^(true|false)$'
 
 		}
 	},
 	additionalProperties: false
 }), isAdminiSignedIn, getVote, isVotePublished, updateVote);
+
+router.put('/api/ufwd/service/survey/:surveyId/time', $testBody({
+	properties: {
+		time: {
+			type: 'string',
+			format: 'date-time'
+		}
+	},
+	required: ['time'],
+	additionalProperties: false
+}), isAdminiSignedIn, getSurvey, modifySurveyTime);
+
+router.put('/api/ufwd/service/vote/:voteId/time', $testBody({
+	properties: {
+		time: {
+			type: 'string',
+			format: 'date-time'
+		}
+	},
+	required: ['time'],
+	additionalProperties: false
+}), isAdminiSignedIn, getVote, modifyVoteTime);
 
 router.delete('/api/ufwd/service/vote/:voteId', getVote, isVotePublished, deleteVote);
 
@@ -309,7 +317,7 @@ router.get('/api/ufwd/app/survey', $testQuery({
 		},
 		close: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)'
+			format: 'date-time'
 		}
 	},
 	additionalProperties: false
@@ -326,7 +334,7 @@ router.get('/api/ufwd/app/vote', $testQuery({
 		},
 		close: {
 			type: 'string',
-			pattern: '(^(19|20)[0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$)'
+			format: 'date-time'
 		},
 		selft: {
 			type: 'string',

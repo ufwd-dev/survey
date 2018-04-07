@@ -9,11 +9,13 @@ describe('vote test', function () {
 	describe('VoteFactory test', function () {
 
 		it('product a vote object', function () {
-			const vote = VoteFactory();
+			const vote = VoteFactory('0', []);
 
 			assert.deepEqual(vote, {
-				range: '=',
-				number: 1,
+				range: {
+					from: 0,
+					to: 0
+				},
 				options: []
 			});
 		});
@@ -23,7 +25,7 @@ describe('vote test', function () {
 			describe('method validate test', function () {
 	
 				it('argument is not an array', function () {
-					const vote = VoteFactory();
+					const vote = VoteFactory('0', []);
 	
 					try {
 						vote.validate('1');
@@ -33,13 +35,13 @@ describe('vote test', function () {
 				});
 	
 				it('the length of argument is 0', function () {
-					const vote = VoteFactory();
+					const vote = VoteFactory('0', []);
 	
 					assert.equal(false, vote.validate([]));
 				});
 	
 				it('the item of argument should be an array', function () {
-					const vote = VoteFactory();
+					const vote = VoteFactory('0', []);
 	
 					try {
 						vote.validate([1, 2, 3]);
@@ -53,7 +55,7 @@ describe('vote test', function () {
 			describe('method filter test' ,function () {
 
 				it('the length of item is not equal with the length of options', function () {
-					const vote = VoteFactory([1,2,3], '0', 1);
+					const vote = VoteFactory('1', [1,2,3]);
 					const sampleList = [[0, 0, 1], [1], [0, 1], [1, 0, 0, 0], [1,1,1,1,1]];
 
 					const newList = vote.filter(sampleList);
@@ -61,7 +63,7 @@ describe('vote test', function () {
 				});
 	
 				it('the number of choose is not equal the number of optional', function () {
-					const vote = VoteFactory([1,2,3], '0', 2);
+					const vote = VoteFactory('2', [1,2,3]);
 	
 					const sampleList = [[0, 0, 1], [1, 1, 1], [0, 1, 1], [1, 1, 0], [1, 1, 1]];
 
@@ -71,7 +73,7 @@ describe('vote test', function () {
 			});
 	
 			it('method analyze test', function () {
-				const vote = VoteFactory(['question1', 'question2', 'question3'], '1', 1);
+				const vote = VoteFactory('1, 3', ['question1', 'question2', 'question3']);
 				const sampleList = [[0, 1, 0], [1, 0, 0], [0, 1, 0], [0, 1, 0]];
 
 				const statistic = vote.analyze(sampleList);

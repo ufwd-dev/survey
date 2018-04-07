@@ -10,7 +10,7 @@ module.exports = function* getOwnVoteList(req, res, next) {
 	const accountId = req.session.accountId;
 	const query = {
 		where: {
-			published: 1
+			published: true
 		},
 		include: [{
 			model: VoteTag
