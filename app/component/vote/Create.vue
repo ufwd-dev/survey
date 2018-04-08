@@ -17,44 +17,83 @@
 	<hr>
 
 	<div class="row">
-		<div class="col-10">
-			<form>
-				<div class="form-group">
-					<label for="">Title</label>
-					<input
-						type="text"
-						class="form-control">
+		<div class="col-6">
+			<div class="card">
+				<div class="card-header">Gentle</div>
+				<div class="card-body">
+					<div class="form-group">
+						<label for="">Title</label>
+						<input
+							type="text"
+							class="form-control">
+					</div>
+					<div class="form-group">
+						<label for="">Question</label>
+						<textarea
+							type="text"
+							class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="">Rules</label>
+						<input
+							type="text"
+							class="form-control">
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="">Question</label>
-					<textarea
-						type="text"
-						class="form-control"></textarea>
+			</div>
+
+			<div class="card mt-3">
+				<div class="card-header">
+					Options
 				</div>
-				<div class="form-group">
-					<label for="">Rules</label>
-					<input
-						type="text"
-						class="form-control">
+				<div class="card-body">
+					<div class="form-group">
+						<label for="">Option 1</label>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control">
+							<div class="input-group-append">
+								<button class="btn btn-secondary"
+									type="button"><i class="fa fa-times"></i></button>
+							</div>
+						</div>
+					</div>
+					<button type="button"
+						class="btn btn-success">New</button>
 				</div>
-			</form>
+			</div>
+
+			<router-link tag="button"
+				class="btn btn-primary btn-lg mt-3"
+				to="/ufwd/survey/vote/1/detail">Create</router-link>
 		</div>
-	</div>
 
-	<h4>Options</h4>
-	<hr>
-
-	<div class="row">
-		<div class="col-10">
-			<form>
-				<div class="form-group">
-					<label for="">Option1</label>
-					<input
-						type="text"
-						class="form-control">
+		<div class="col-6">
+			<div class="card">
+				<div class="card-header">
+					Preview vote
 				</div>
-			</form>
+				<div class="card-body">
+					<h4>Title: xxx vote</h4>
+					<hr>
 
+					<h5>1. Question ... ?</h5>
+
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+						<label class="form-check-label" for="defaultCheck1">
+							Option 1
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+						<label class="form-check-label" for="defaultCheck2">
+							Option 2
+						</label>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 

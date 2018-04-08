@@ -32,15 +32,16 @@
 
 	<ul class="nav nav-tabs">
 		<li class="nav-item">
-			<a @click.stop=""
+			<a @click="voteIsPulished=true"
 				class="nav-link active">Published</a>
 		</li>
 		<li class="nav-item">
-			<a href="#" class="nav-link">Unpublished</a>
+			<a @click="voteIsPulished=false"
+				class="nav-link">Unpublished</a>
 		</li>
 	</ul>
 
-	<table class="table mt-3 tex-center">
+	<table class="table mt-3 tex-center" v-if="voteIsPulished">
 		<thead>
 			<tr>
 				<th>Title</th>
@@ -57,7 +58,7 @@
 		</tbody>
 	</table>
 
-	<table class="table mt-3 text-center">
+	<table class="table mt-3 text-center" v-else>
 		<thead>
 			<tr>
 				<th>Title</th>
@@ -85,6 +86,7 @@ export default {
 	data() {
 		return {
 			voteList: [],
+			voteIsPulished: true,
 		}
 	},
 	methods: {
@@ -98,8 +100,8 @@ export default {
 				})
 		},
 	},
-	mounted() {
-		this.getVoteList('published=true');
-	}
+	// mounted() {
+	// 	this.getVoteList('published=true');
+	// }
 }
 </script>

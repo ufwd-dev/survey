@@ -52,7 +52,7 @@ app.router.addRoutes([
 				component: AddVote
 			},
 			{
-				path: 'vote-report',
+				path: 'vote/:id/vote-report',
 				component: VoteReport
 			},
 			{
