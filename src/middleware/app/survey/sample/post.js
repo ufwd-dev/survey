@@ -7,6 +7,7 @@ module.exports = function* createSurveySample(req, res, next) {
 	const Survey = res.sequelize.model('ufwdSurvey');
 	const surveyId = req.params.surveyId;
 	const accountId = req.session.accountId;
+	const date = new Date();
 
 	const survey = yield Survey.findOne({
 		where: {
@@ -25,7 +26,7 @@ module.exports = function* createSurveySample(req, res, next) {
 		throwError('The survey is not existed.', 404);
 	}
 
-	if (Date.parse(survey.time) < Date.parse(new Date())) {
+	if (Date.parse(survey.time) < Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())) {
 		throwError('The survey is closed.', 404);
 	}
 

@@ -5,6 +5,7 @@ const { throwError } = require('error-standardize');
 module.exports = function* getSurveySample(req, res, next) {
 	const survey = res.data();
 	const SurveySample = res.sequelize.model('ufwdSurveySample');
+	const date = new Date();
 
 	const sampleList = yield SurveySample.findAll({
 		where: {
@@ -12,7 +13,7 @@ module.exports = function* getSurveySample(req, res, next) {
 		}
 	});
 
-	if (Date.parse(survey.time) > Date.parse(new Date())) {
+	if (Date.parse(survey.time) > Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())) {
 		throwError('The survey is not closed', 404);
 	}
 
