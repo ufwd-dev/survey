@@ -20,6 +20,6 @@
     "ufwd-system": "git+https://github.com/ufwd-dev/system.git"
   },
   "devDependencies": {
-    "mocha": "^5.0.5"
+    "mocha": "^5.1.0"
   }
 }
