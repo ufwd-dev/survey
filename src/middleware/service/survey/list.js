@@ -16,7 +16,7 @@ module.exports = function* getSurveyList(req, res, next) {
 
 	keyword ? (query.where.title = {[Sequelize.Op.like]: `%${keyword}%`}) : undefined;
 
-	published ? (query.where.published = (published === 'true' ? 1 : 0)) : undefined;
+	published ? (query.where.published = (published === 'true' ? true : false)) : undefined;
 
 	close ? (query.where.time = {[Sequelize.Op.gt]: new Date(close)}) : undefined;
 

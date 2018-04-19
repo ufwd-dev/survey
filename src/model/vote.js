@@ -34,17 +34,8 @@ const Vote = sequelize.define('ufwdVote', {
 		allowNull: false
 	},
 	published: {
-		type: Sequelize.TINYINT,
-		defaultValue: 0,
-		set(published) {
-
-			published === 'true' ? this.setDataValue('published', 1) : this.setDataValue('published', 0);
-		},
-		get() {
-			const published = this.getDataValue('published');
-
-			return published === 1 ? true : false;
-		}
+		type: Sequelize.BOOLEAN,
+		defaultValue: false
 	},
 	count: {
 		type: Sequelize.INTEGER,

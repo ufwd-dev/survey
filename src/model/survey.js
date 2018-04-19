@@ -25,17 +25,9 @@ const Survey = sequelize.define('ufwdSurvey', {
 		allowNull: false
 	},
 	published: {
-		type: Sequelize.TINYINT,
+		type: Sequelize.BOOLEAN,
 		allowNull: false,
-		defaultValue: 0,
-		set(published) {
-			published === 'true' ? this.setDataValue('published', 1) : this.setDataValue('published', 0);
-		},
-		get() {
-			const published = this.getDataValue('published');
-
-			return published === 1 ? true : false;
-		}
+		defaultValue: false
 	}
 }, {
 	paranoid: true

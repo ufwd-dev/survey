@@ -77,9 +77,7 @@ router.post('/api/ufwd/service/survey', $testBody({
 			}
 		},
 		published: {
-			type: 'string',
-			pattern: '^(true|false)$'
-
+			type: 'boolean'
 		}
 	},
 	required: ['title', 'rule', 'time', 'content'],
@@ -143,9 +141,7 @@ router.put('/api/ufwd/service/survey/:surveyId', $testBody({
 			}
 		},
 		published: {
-			type: 'string',
-			pattern: '^(true|false)$'
-
+			type: 'boolean'
 		}
 	},
 	additionalProperties: false
@@ -192,9 +188,7 @@ router.post('/api/ufwd/service/vote', $testBody({
 			pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 		},
 		published: {
-			type: 'string',
-			pattern: '^(true|false)$'
-
+			type: 'boolean'
 		}
 	},
 	required: ['title', 'question', 'rule', 'time', 'options', 'range', 'published'],
@@ -252,9 +246,7 @@ router.put('/api/ufwd/service/vote/:voteId', $testBody({
 			pattern: '^(\\s*\\d{1}\\s*|\\s*\\d{1}\\s*,\\s*\\d{1}\\s*)$'
 		},
 		published: {
-			type: 'string',
-			pattern: '^(true|false)$'
-
+			type: 'boolean'
 		}
 	},
 	additionalProperties: false
