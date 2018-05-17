@@ -6,22 +6,22 @@
 			<li class="breadcrumb-item">
 				<router-link tag="a" to="/">首页</router-link>
 			</li>
-			<li class="breadcrumb-item active">投票</li>
+			<li class="breadcrumb-item active">问卷</li>
 		</ol>
 	</nav>
 
-	<h3>全部投票</h3>
+	<h3>全部问卷</h3>
 	<hr>
 
 	<data-tables
-		:data="voteList"
+		:data="surveyList"
 		:search-def="searchDef"
 		:pagination-def="paginationDef"
 		:checkbox-filter-def="checkboxFilterDef"
 		:actions-def="actionsDef">
 		<el-table-column
-			v-for="column in voteColumns"
-			:key="column.label"
+			v-for="(column, index) in surveyColumns"
+			:key="index"
 			align="center"
 			:label="column.label"
 			:prop="column.prop"
@@ -31,33 +31,35 @@
 		</el-table-column>
 		<el-table-column
 			label="操作"
-			width="120"
+			width="80"
 			align="center">
 			<template slot-scope="scope">
 				<el-button type="text"
-					@click="getVoteById(scope.row.id)">查看</el-button>
+					@click="getSurveyById(scope.row.id)">查看</el-button>
 			</template>
 		</el-table-column>
 	</data-tables>
-	
 </div>
 </template>
 
 <script>
 import axios from 'axios';
-import DataTables from 'vue-data-tables';
+import dateFormat from 'dateformat';
 
 export default {
-	name: 'vote',
-	components: { DataTables },
+	name: 'survey',
 	data() {
 		return {
-			voteList: [],
-			voteIsPulished: true,
-			voteColumns: [
+			surveyList: [],
+			surveyColumns: [
 				{
-					label: '投票标题',
+					label: '问卷标题',
 					prop: 'title',
+					minWidth: '180'
+				},
+				{
+					label: '标签',
+					prop: 'label',
 					minWidth: '180'
 				},
 				{
@@ -68,24 +70,20 @@ export default {
 				{
 					label: '创建时间',
 					prop: 'created_at',
-					sortable: 'custom',
 					width: '180'
 				},
 				{
-					label: '过期时间',
-					prop: '',
+					label: '结束时间',
+					prop: 'time',
 					width: '180'
 				}
 			],
 			searchDef: {
-				colProps: {
-					span: 8
-				},
-				props: ['title']
+				show: false
 			},
 			paginationDef: {
 				pageSize: 10,
-				pageSizes: [5, 10, 20]
+				pageSizes: [5, 10, 20],
 			},
 			checkboxFilterDef: {
 				colProps: {
@@ -113,26 +111,26 @@ export default {
 					{
 						name: '新建',
 						handler: () => {
-							this.$router.push('add-vote');
+							this.$router.push('add-questionaire');
 						}
 					}
 				]
 			}
 		}
 	},
-	methods: {
-		getVoteById(id) {
-			this.$router.push(`vote/${id}/detail`);
-		},
-		getVoteList() {
-			return axios.get(`/api/ufwd/service/vote`)
-				.then(res => {
-					this.voteList = res.data.data;
-				})
-		},
-	},
 	mounted() {
-		this.getVoteList();
+		this.getSurveyList();
+	},
+	methods: {
+		getSurveyById(id) {
+			return this.$router.push(`questionaire/${id}/detail`);
+		},
+		getSurveyList() {
+			return axios.get('/api/ufwd/service/survey')
+				.then(res => {
+					this.surveyList = res.data.data;
+				})
+		}
 	}
 }
 </script>

@@ -1,4 +1,9 @@
-survey: '问卷与投票'
+ufwdSurvey:
+  home: '首页'
 
-item:
-  survey: '调查'
+  menu:
+    survey: '问卷与投票'
+
+  survey:
+    questionaire: '问卷'
+    vote: '投票'

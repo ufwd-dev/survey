@@ -7,26 +7,26 @@ import zh_CN from './i18n/zh_CN.yaml';
 app.i18n.mergeLocaleMessage('en', en_US);
 app.i18n.mergeLocaleMessage('zh', zh_CN);
 
-app.i18n.locale = 'en';
+app.i18n.locale = 'zh';
 
 import Home from 'app/component/Home.vue';
 
-import Survey from './component/survey/Survey.vue';
-import AddSurvey from './component/survey/Create.vue';
-import SurveyDetail from './component/survey/Detail.vue';
+import Questionaire from './component/questionaire/Questionaire.vue';
+import AddQuestionaire from './component/questionaire/Create.vue';
+import QuestionaireDetail from './component/questionaire/Detail.vue';
 
 import Vote from './component/vote/Vote.vue';
 import AddVote from './component/vote/Create.vue';
 import VoteDetail from './component/vote/Detail.vue';
 import VoteReport from './component/vote/Report.vue';
 
-app.menu.addGroup('survey', [
+app.menu.addGroup('ufwdSurvey.menu.survey', [
 	{
-		label: 'item.survey',
-		path: '/ufwd/survey/survey'
+		label: 'ufwdSurvey.survey.questionaire',
+		path: '/ufwd/survey/questionaire'
 	},
 	{
-		label: 'item.vote',
+		label: 'ufwdSurvey.survey.vote',
 		path: '/ufwd/survey/vote'
 	}
 ]);
@@ -56,16 +56,16 @@ app.router.addRoutes([
 				component: VoteReport
 			},
 			{
-				path: 'survey',
-				component: Survey
+				path: 'questionaire',
+				component: Questionaire
 			},
 			{
-				path: 'add-survey',
-				component: AddSurvey
+				path: 'add-questionaire',
+				component: AddQuestionaire
 			},
 			{
-				path: 'survey/:id/detail',
-				component: SurveyDetail
+				path: 'questionaire/:id/detail',
+				component: QuestionaireDetail
 			}
 		]
 	}
