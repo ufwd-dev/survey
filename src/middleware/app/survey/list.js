@@ -24,10 +24,6 @@ module.exports = function* getOwnSurveyList(req, res, next) {
 
 	const surveyList = yield Survey.findAll(query);
 
-	if (surveyList.length === 0) {
-		throwError('The survey is not existed', 404);
-	}
-
 	res.data(surveyList);
 
 	next();

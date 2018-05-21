@@ -28,10 +28,6 @@ module.exports = function* getOwnVoteList(req, res, next) {
 
 	const voteList = yield Vote.findAll(query);
 
-	if (voteList.length === 0) {
-		throwError('The vote is not existed', 404);
-	}
-
 	res.data(voteList);
 
 	next();
